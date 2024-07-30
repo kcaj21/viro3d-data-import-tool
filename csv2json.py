@@ -36,9 +36,14 @@ def make_protein_structure_json(csv_file_path, json_file_path):
 parent = 'Realm'
 child = 'Kingdom'
 
-def make_phylogenetic_tree_json(tax_file_path, child_level, parent_level):
+levels = ['Realm', 'Kingdom', 'Phylum', 'Subphylum', 'Class', 'Subclass', 'Order', 'Suborder', 'Family', 'Subfamily', 'Genus', 'Subgenus', 'Species']
+
+
+def make_phylogenetic_tree_json(tax_file_path):
 
     # reading csv to take parent column, remove the duplicates and blank values and create a list from them
+
+    parent_level = levels[0]
 
     parent_filter_options = pd.read_csv(
         tax_file_path, usecols=[parent_level]
@@ -59,41 +64,56 @@ def make_phylogenetic_tree_json(tax_file_path, child_level, parent_level):
         # instantiating dataframe object that is just the parent and child columns, unaltered
 
         df = pd.read_csv(
-            tax_file_path, usecols=[parent_level, child_level]
+            tax_file_path
             )
 
         filtered_df = df.loc[
             df[parent_level] == option
-            ].drop_duplicates(subset=[child_level]
-            )
+            ]
         
-        # turning the unique values from the children column into a list
+        counter = 1
+
+        child_level = levels[counter]
         
-        children = filtered_df[child_level].dropna().tolist()
-
-        # creating a result variable - a dictionary with the parent taxon name, parent level and an empty list of children taxa
-
-        result = dict(
-            id = option,
-            level = parent_level,
-            children_taxa = []
-        )
-
-        # looping over each child taxon and adding it to the children_taxa list in the result variable
-
-        for child in children:
-            if type(child) == float:
-                pass
-            else:
-                child_result = dict(
-                    name = child,
-                    level = child_level
+        if not filtered_df[child_level].drop_duplicates().isnull().any():
+        
+            filtered_df = filtered_df.drop_duplicates(subset=[child_level]
                 )
-                result['children_taxa'].append(child_result)
+                    
+            # turning the unique values from the children column into a list
             
-        # appending the full result to the tax_list variable
+            children = filtered_df[child_level].dropna().tolist()
 
-        tax_list.append(result)
+            # creating a result variable - a dictionary with the parent taxon name, parent level and an empty list of children taxa
+
+            result = dict(
+                id = option,
+                level = parent_level,
+                children_taxa = []
+            )
+
+            # looping over each child taxon and adding it to the children_taxa list in the result variable
+
+            for child in children:
+                if type(child) == float:
+                    pass
+                else:
+                    child_result = dict(
+                        name = child,
+                        level = child_level
+                    )
+                    result['children_taxa'].append(child_result)
+                
+            # appending the full result to the tax_list variable
+
+            tax_list.append(result)
+        
+        else:
+            while counter <= len(levels) -1:
+                counter+1
+                
+
+            print('found null')
 
     print(tax_list)
     with open(json_file_path, 'w', encoding='utf-8') as jsonf:
@@ -123,9 +143,9 @@ def make_phylogenetic_tree_json(tax_file_path, child_level, parent_level):
          
 csv_file_path = r'virosphere-fold-v1_predicted_dataset_updated.csv'
 tax_file_path = r'metadata_taxonomy_only.csv'
-json_file_path = r'/home/viro-admin/projects/data/metadata/phylogeny.json'
+json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/phylogeny.json'
  
-make_phylogenetic_tree_json(tax_file_path, child, parent)
+make_phylogenetic_tree_json(tax_file_path)
 
 # Virus name is col 15
 
