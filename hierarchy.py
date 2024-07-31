@@ -10,33 +10,62 @@ csv_file_path = r'metadata_taxonomy_only.csv'
 
 def csv_to_hierarchy(csv_file_path):
 
-    ranks = ['Realm', 'Kingdom', 'Phylum', 'Subphylum', 'Class', 'Subclass', 'Order', 'Suborder', 'Family', 'Subfamily', 'Genus', 'Subgenus', 'Species']
+    ranks = ['Realm', 'Subrealm', 'Kingdom', 'Subkingdom', 'Phylum', 'Subphylum', 'Class', 'Subclass', 'Order', 'Suborder', 'Family', 'Subfamily', 'Genus', 'Subgenus', 'Species']
 
-    parent_filter_options = pd.read_csv(
-        csv_file_path, usecols=[ranks[0]]
-        ).drop_duplicates(subset=[ranks[0]]).dropna()[ranks[0]].tolist()
-    
     df = pd.read_csv(csv_file_path)
 
-    child_list = []
+    json_result = []
 
-    for option in parent_filter_options:
-        filtered_df = df.loc[df[ranks[0]] == option]
+    parent_rank = 0
 
-        counter = 1
+    base_child_rank = 1
 
-        # pdb.set_trace()
-        while not filtered_df[ranks[counter]].drop_duplicates().notnull().any():
-            counter = counter + 1
-            print(counter)
-        else:
+    while parent_rank < len(ranks) -1:
+    # while parent_rank < 4:
 
 
 
-    
-            child_filter = filtered_df[ranks[counter]].drop_duplicates().dropna().tolist()
-            child_list.append(child_filter)
-    print(child_list)
+        parent_filter_options = pd.read_csv(
+            csv_file_path, usecols=[ranks[parent_rank]]
+            ).drop_duplicates(subset=[ranks[parent_rank]]).dropna()[ranks[parent_rank]].tolist()
+        
+        for option in parent_filter_options:
+            filtered_df = df.loc[df[ranks[parent_rank]] == option]
+
+            child_rank = base_child_rank
+
+            # pdb.set_trace()
+            while not filtered_df[ranks[child_rank]].drop_duplicates().notnull().any():
+                child_rank+=1
+            else:
+                    
+                child_filter = filtered_df[ranks[child_rank]].drop_duplicates().dropna().tolist()
+                # print(child_filter)
+                result = dict(
+                id = option,
+                level = ranks[parent_rank],
+                children_taxa = []
+                )
+                
+                for child in child_filter:
+                
+                    child_result = dict(
+                    name = child,
+                    level = ranks[child_rank]
+                    )
+                
+                    result['children_taxa'].append(child_result)
+
+                json_result.append(result)
+                child_rank = base_child_rank
+        parent_rank+=1
+        base_child_rank+=1
+    # print(json_result)
+    with open(json_file_path, 'w', encoding='utf-8') as jsonf:
+        jsonf.write(json.dumps(json_result, indent=4))
+
+json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/phylogeny.json'
+
 
 csv_to_hierarchy(csv_file_path)
 
