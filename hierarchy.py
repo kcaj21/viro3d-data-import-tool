@@ -60,13 +60,15 @@ def csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path):
 
         parent_rank+=1
         base_child_rank+=1
+        percentage_progress = round((parent_rank / (len(ranks) -1)) * 100, 2)
+        print(f'\rProgress: {percentage_progress}%', end='', flush=True)
 
     with open(taxonomy_json_file_path, 'w', encoding='utf-8') as jsonf:
         jsonf.write(json.dumps(json_result, indent=4))
 
 
 
-# csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path)
+csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path)
 
 def csv_to_clusters(clusters_csv, clusters_json_file_path):
 
@@ -113,5 +115,5 @@ def csv_to_clusters(clusters_csv, clusters_json_file_path):
     with open(clusters_json_file_path, 'w', encoding='utf-8') as jsonf:
         jsonf.write(json.dumps(json_result, indent=4))
 
-csv_to_clusters(clusters_csv, clusters_json_file_path)
+# csv_to_clusters(clusters_csv, clusters_json_file_path)
 
