@@ -1,4 +1,4 @@
 *.csv
 *.json
 /venv
-/blast_db
+/blastp_db
