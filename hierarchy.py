@@ -8,8 +8,6 @@ taxonomy_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/phy
 clusters_csv = r'foldseekCluster_cluster_meta.csv'
 clusters_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/clusters.json'
 
-
-
 def csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path):
 
     ranks = ['Realm', 'Subrealm', 'Kingdom', 'Subkingdom', 'Phylum', 'Subphylum', 'Class', 'Subclass', 'Order', 'Suborder', 'Family', 'Subfamily', 'Genus', 'Subgenus', 'Species']
@@ -68,7 +66,7 @@ def csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path):
 
 
 
-csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path)
+# csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path)
 
 def csv_to_clusters(clusters_csv, clusters_json_file_path):
 
@@ -115,5 +113,16 @@ def csv_to_clusters(clusters_csv, clusters_json_file_path):
     with open(clusters_json_file_path, 'w', encoding='utf-8') as jsonf:
         jsonf.write(json.dumps(json_result, indent=4))
 
+def find_duplciates(clusters_csv):
+
+    df = pd.read_csv(clusters_csv)
+
+    cluster_members = df[df['member_record_id'].duplicated() == True]
+
+    print(cluster_members)
+    
+
 # csv_to_clusters(clusters_csv, clusters_json_file_path)
+
+find_duplciates(clusters_csv)
 
