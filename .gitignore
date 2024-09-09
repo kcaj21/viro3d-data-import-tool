@@ -2,3 +2,4 @@
 *.json
 /venv
 /blastp_db
+/blastp_db_toy

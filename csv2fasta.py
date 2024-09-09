@@ -2,8 +2,14 @@ import csv
 import pandas as pd
 
 # Define the paths to your input CSV file and the output FASTA file
-in_path = "/home/viro-admin/projects/data/phylo-data-script/sequences.csv"
-out_path = "/home/viro-admin/projects/data/phylo-data-script/viro3d_seq_db.fasta"
+
+# Main Data
+# in_path = "/home/viro-admin/projects/data/phylo-data-script/sequences.csv"
+# out_path = "/home/viro-admin/projects/data/phylo-data-script/viro3d_seq_db.fasta"
+
+#Toy Data
+in_path = "/home/viro-admin/projects/data/phylo-data-script/toy_sequences.csv"
+out_path = "/home/viro-admin/projects/data/phylo-data-script/toy_viro3d_seq_db.fasta"
 
 # Open the input CSV file for reading and the output FASTA file for writing
 with open(in_path, "r") as in_handle, open(out_path, "w") as out_handle:
