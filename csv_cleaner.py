@@ -1,7 +1,5 @@
 import csv
 
-
-
 def remove_ufeff_from_first_cell(input_file, output_file):
     with open(input_file, 'r', newline='', encoding='utf-8') as infile, \
          open(output_file, 'w', newline='', encoding='utf-8') as outfile:
@@ -27,8 +25,11 @@ def remove_ufeff_from_first_cell(input_file, output_file):
             writer.writerow(row)
 
 # Usage
-input_file = r'virosphere-fold-v1_toy_dataset_edit.csv'
-output_file = r'virosphere-fold-v1_toy_dataset_cleaned.csv'
+# input_file = r'virosphere-fold-v1_toy_dataset_edit.csv'
+input_file = r'/home/viro-admin/projects/data/phylo-data-script/graph_data.csv'
+# output_file = r'virosphere-fold-v1_toy_dataset_cleaned.csv'
+output_file = r'/home/viro-admin/projects/data/phylo-data-script/virosphere-fold-v1_predicted_dataset_updated_3_cleaned.csv'
+
 
 remove_ufeff_from_first_cell(input_file, output_file)
 
