@@ -3,14 +3,18 @@ import json
 import pandas as pd
 
 taxonomy_csv_file_path = r'virosphere-fold-v1_predicted_dataset_updated.csv'
+taxonomy_test_csv_file_path = r'virosphere-fold-v1_predicted_dataset_updated_3.csv'
+
 taxonomy_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/phylogeny.json'
+taxonomy_test_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/phylogeny_test.json'
+
 
 clusters_csv = r'foldseekCluster_cluster_meta.csv'
 clusters_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/clusters.json'
 
 def csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path):
 
-    ranks = ['Realm', 'Subrealm', 'Kingdom', 'Subkingdom', 'Phylum', 'Subphylum', 'Class', 'Subclass', 'Order', 'Suborder', 'Family', 'Subfamily', 'Genus', 'Subgenus', 'Species']
+    ranks = ['Realm', 'Subrealm', 'Kingdom', 'Subkingdom', 'Phylum', 'Subphylum', 'Class', 'Subclass', 'Order', 'Suborder', 'Family', 'Subfamily', 'Genus', 'Subgenus', 'Species', 'Virus name(s)']
 
     df = pd.read_csv(taxonomy_csv_file_path)
 
@@ -66,7 +70,7 @@ def csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path):
 
 
 
-# csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path)
+csv_to_taxonomy_hierarchy(taxonomy_test_csv_file_path, taxonomy_test_json_file_path)
 
 def csv_to_clusters(clusters_csv, clusters_json_file_path):
 
@@ -124,5 +128,5 @@ def find_duplciates(clusters_csv):
 
 # csv_to_clusters(clusters_csv, clusters_json_file_path)
 
-find_duplciates(clusters_csv)
+# find_duplciates(clusters_csv)
 

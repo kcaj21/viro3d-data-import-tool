@@ -26,7 +26,7 @@ def remove_ufeff_from_first_cell(input_file, output_file):
 
 # Usage
 # input_file = r'virosphere-fold-v1_toy_dataset_edit.csv'
-input_file = r'/home/viro-admin/projects/data/phylo-data-script/graph_data.csv'
+input_file = r'/home/viro-admin/projects/data/phylo-data-script/graph_data_viruses.csv'
 # output_file = r'virosphere-fold-v1_toy_dataset_cleaned.csv'
 output_file = r'/home/viro-admin/projects/data/phylo-data-script/virosphere-fold-v1_predicted_dataset_updated_3_cleaned.csv'
 
