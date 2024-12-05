@@ -4,9 +4,9 @@ from genome_coordinates import genome_coordinates_csv_to_json
 from graph_data import make_graph_data_json
 from protein_structures import make_protein_structure_json
 
-# Define paths
-input_folder = r'/home/viro-admin/projects/data/phylo-data-script/input_files'
-output_folder = r'/home/viro-admin/projects/data/phylo-data-script/output_files'
+# Folder paths
+input_folder = r'/home/viro-admin/projects/data/viro3d-data-import-tool/input_files'
+output_folder = r'/home/viro-admin/projects/data/viro3d-data-import-tool/output_files'
 
 # Output file paths
 protein_structure_json_file_path = os.path.join(output_folder, 'protein_structures.json')
@@ -18,7 +18,7 @@ def check_input_folder(folder_path):
 
     if not os.path.exists(folder_path):
         raise FileNotFoundError(f"The input folder '{folder_path}' does not exist.")
-    if not os.listdir(folder_path):  # Checks if the directory is empty
+    if not os.listdir(folder_path):
         raise FileNotFoundError(f"The input folder '{folder_path}' is empty.")
     print(f"Input folder '{folder_path}' is valid and contains files.")
 

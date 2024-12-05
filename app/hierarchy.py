@@ -3,14 +3,6 @@ import json
 import pandas as pd
 
 taxonomy_csv_file_path = r'virosphere-fold-v1_predicted_dataset_updated.csv'
-taxonomy_test_csv_file_path = r'virosphere-fold-v1_predicted_dataset_updated_3.csv'
-
-taxonomy_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/phylogeny.json'
-taxonomy_test_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/phylogeny_test.json'
-
-
-clusters_csv = r'foldseekCluster_cluster_meta.csv'
-clusters_json_file_path = r'/home/viro-admin/projects/data/phylo-data-script/clusters.json'
 
 def csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path):
 
@@ -67,66 +59,3 @@ def csv_to_taxonomy_hierarchy(taxonomy_csv_file_path, taxonomy_json_file_path):
 
     with open(taxonomy_json_file_path, 'w', encoding='utf-8') as jsonf:
         jsonf.write(json.dumps(json_result, indent=4))
-
-
-
-csv_to_taxonomy_hierarchy(taxonomy_test_csv_file_path, taxonomy_test_json_file_path)
-
-def csv_to_clusters(clusters_csv, clusters_json_file_path):
-
-    df = pd.read_csv(clusters_csv)
-
-    json_result = []
-
-    cluster_representatives = df['cluster_representative'].drop_duplicates().tolist()
-
-    length = len(cluster_representatives) - 1
-
-    progress = 0
-
-    for cluster_rep in cluster_representatives:
-
-
-        result = dict(
-            _id = cluster_rep,
-            cluster_members = []
-        )
-
-        filtered_df = df.loc[df['cluster_representative'] == cluster_rep]
-
-        children = filtered_df.iloc[:, 1:9]
-
-        for index, row in children.iterrows():
-            
-            child_result = dict(
-                cluster_rep_id = cluster_rep,
-                member_record_id = row['member_record_id'],
-                protein_length = row['protlen'],
-                tax_id = row['taxid'],
-                species = row['Species'],
-                plDDT_score = row['plddd']
-                )
-
-            result['cluster_members'].append(child_result)
-
-        json_result.append(result)
-        progress+=1
-        percentage_progress = round((progress / length) * 100, 2)
-        print(f'\rProgress: {percentage_progress}%', end='', flush=True)
-
-    with open(clusters_json_file_path, 'w', encoding='utf-8') as jsonf:
-        jsonf.write(json.dumps(json_result, indent=4))
-
-def find_duplciates(clusters_csv):
-
-    df = pd.read_csv(clusters_csv)
-
-    cluster_members = df[df['member_record_id'].duplicated() == True]
-
-    print(cluster_members)
-    
-
-# csv_to_clusters(clusters_csv, clusters_json_file_path)
-
-# find_duplciates(clusters_csv)
-

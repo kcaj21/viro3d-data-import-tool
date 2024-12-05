@@ -7,15 +7,13 @@ from collections import OrderedDict
 from unidecode import unidecode
 
 # File Paths
-data_csv_filepath = r'/home/viro-admin/projects/data/phylo-data-script/input_files/virosphere-fold-v1_predicted_dataset_updated_4.csv'
-genome_coordinates_json_filepath = r'/home/viro-admin/projects/data/phylo-data-script/output_files/genome_coordinates.json'
+data_csv_filepath = r'/home/viro-admin/projects/data/viro3d-data-import-tool/input_files/virosphere-fold-v1_predicted_dataset_updated_4.csv'
+genome_coordinates_json_filepath = r'/home/viro-admin/projects/data/viro3d-data-import-tool/output_files/genome_coordinates.json'
 
 # Main Conversion Function
 def genome_coordinates_csv_to_json(data_csv_filepath, genome_coordinates_json_filepath):
     print(f"Processing: genome_coordinates.json")
     
-    
-    # Load CSV and Prepare Columns
     df = pd.read_csv(
         data_csv_filepath, 
         usecols=[
@@ -107,9 +105,10 @@ def genome_coordinates_csv_to_json(data_csv_filepath, genome_coordinates_json_fi
     with open(genome_coordinates_json_filepath, 'w', encoding='utf-8') as jsonf:
         jsonf.write(json.dumps(mongo_documents, indent=4, ensure_ascii=False))
 
-# Helper: No Joins Converter
+#This converter is envoked for viruses that DON'T have spliced genomes (no joins)
 def genome_with_no_joins_converter(genomic_coordinates, id, pept_cat, nt_acc, segment, virus_name, gene_name, isolate_designation, genome_length_bp):
-    # Clean and parse coordinates
+    
+    # Clean and parse the coordinates property
     genomic_coordinates = genomic_coordinates.replace(">", "").replace("<", "")
     coordinates_cleaned = genomic_coordinates[1:-1]
 
@@ -138,9 +137,10 @@ def genome_with_no_joins_converter(genomic_coordinates, id, pept_cat, nt_acc, se
     }]
     return annotations
 
-# Helper: Joins Converter
+#This converter is envoked for viruses that DO have spliced genomes (with joins)
 def genome_with_joins_converter(join_coordinates, id, pept_cat, nt_acc, segment, virus_name, gene_name, isolate_designation, genome_length_bp):
-    # Clean and parse join coordinates
+    
+    # Clean and parse the coordinates property
     join_coordinates = join_coordinates.replace(">", "").replace("<", "")[5:-1]
     joins_list = join_coordinates.split(',')
 
@@ -169,12 +169,15 @@ def genome_with_joins_converter(join_coordinates, id, pept_cat, nt_acc, segment,
 
     # Sort and add join annotations
     final_joins_list.sort(key=operator.itemgetter('start'))
+    
+    #The distance between the annotations being joined must be calculated (the difference variable)
+    #Then, 0.01 will be added to the coordinate of the "end" annotation (where the join begins) and 0.01 subtracted from the "start" annotation (where the jonin ends)
     for i in range(len(final_joins_list) - 1):
         difference = final_joins_list[i + 1]["start"] - final_joins_list[i]["end"]
         left_join_start = final_joins_list[i]["end"] + 0.01
-        left_join_end = final_joins_list[i]["end"] + (difference / 2)
-
-        right_join_start = final_joins_list[i + 1]["start"] - (difference / 2) + 0.01
+        left_join_end = final_joins_list[i]["end"] + (difference / 2) #The difference is divided by 2 and ADDED to the left join end. Therefore, a line of a length half that of the distance is drawn
+        #The left join end and right join start lines will meet in the middle of the distance between the annotations
+        right_join_start = final_joins_list[i + 1]["start"] - (difference / 2) + 0.01 #The difference is divided by 2 and SUBTRACTED from the right join start. Therefore, a line of a length half that of the distance is drawn
         right_join_end = final_joins_list[i + 1]["start"] - 0.01
 
         final_joins_list.insert(i + 1, {
@@ -211,7 +214,7 @@ def genome_with_joins_converter(join_coordinates, id, pept_cat, nt_acc, segment,
 
     return final_joins_list
 
-# Type Testing Function
+# Type Testing Function to check for any NaN values in pandas dataframe
 def type_test(coords_dictionary):
     for item in coords_dictionary:
         print(type(item['nt_acc']))
