@@ -2,6 +2,9 @@ from Bio.Blast.Applications import NcbiblastpCommandline
 from io import StringIO
 from Bio.Blast import NCBIXML
 
+#Biopython is a wrapper for the NCBI-blast+ CLI tool.
+#NCBI-blast+ is installed on the development VM and is also installed in the docker container on the public VM, via the Dockerfile.
+
 def blast_query(query_sequence):
     # BLASTP command parameters
     blastp_cline = NcbiblastpCommandline(db="blastp_db_toy/toy_viro3d_seq_db.fas", outfmt=5, num_threads=4)
