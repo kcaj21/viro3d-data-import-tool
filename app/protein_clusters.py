@@ -1,7 +1,9 @@
 import json
 import pandas as pd
+from unidecode import unidecode
 
-clusters_csv = r'/home/viro-admin/projects/data/viro3d-data-import-tool/input_files/foldseekCluster_cluster_meta.csv'
+
+clusters_csv = r'/home/viro-admin/projects/data/viro3d-data-import-tool/input_files/merged_cluster_file.csv'
 output_path = r'/home/viro-admin/projects/data/viro3d-data-import-tool/output_files/clusters.json'
 
 #This will convert the CSV of clusters of similar proteins to JSON
@@ -32,7 +34,13 @@ def csv_to_clusters(clusters_csv, clusters_json_file_path):
                     "protein_length": row['protlen'],
                     "tax_id": row['taxid'],
                     "species": row['Species'],
-                    "plDDT_score": row['plddd']
+                    "plDDT_score": row['plddd'],
+                    "virus_name": unidecode(row['Virus name(s)']),
+                    "family": row['Family'],
+                    "host": row['host'] if type(row['host']) != float else '',
+                    "genbank_name_curated": row['genbank_name_curated'],
+                    "uniprot_id": row['uniprot_id'] if type(row['uniprot_id']) != float else '',
+                    "nucleotide_accession_number": row['nt_acc']  
                 },
                 axis=1 # axis can either be 0 or 1. 0 for iterating column-wise and 1 for row-wise
             ).tolist()
